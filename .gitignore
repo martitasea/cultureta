@@ -1,0 +1,10 @@
+node_modules/
+dist/
+storybook-static/
+.env
+stats.json
+
+# IDEA
+*.iml
+.project
+.idea/

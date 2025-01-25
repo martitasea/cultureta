@@ -2,7 +2,7 @@ import React from 'react';
 import MapIcon from '@mui/icons-material/Map';
 import TableChartIcon from '@mui/icons-material/TableChart';
 
-export const DRAWER_WIDTH = 300;
+export const DRAWER_WIDTH = 320;
 export const SM_BREAKPOINT = 600;
 export const MINI_SIDE_PANEL_WIDTH = 61;
 export const MINI_SIDE_PANEL_DENSE_WIDTH = 45;
@@ -70,4 +70,4 @@ export const MAPSTYLES = [
   }
 ];
 
-export const INITIAL_MAPSTYLE_URL = MAPSTYLES[2].id;
+export const INITIAL_MAPSTYLE_URL = MAPSTYLES[3].id;

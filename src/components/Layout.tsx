@@ -22,7 +22,9 @@ export type MainProps = {
   isleftdraweropen: boolean
 }
 
-const Main = styled(Box)<MainProps>(({widescreen, isleftdraweropen}) => ({
+const Main = styled(Box, {
+  shouldForwardProp: (prop) => prop !== 'widescreen' && prop !== 'isleftdraweropen',
+})<MainProps>(({ widescreen, isleftdraweropen }) => ({
   flexGrow: 1,
   padding: 0,
   position: 'absolute',

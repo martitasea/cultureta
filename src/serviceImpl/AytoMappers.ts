@@ -1,6 +1,8 @@
 import {CulturalEventDto} from '../domain/entities/CulturalEventDto';
 import {getLastWords} from '../utils/getLastWords';
 import {CulturalEvent} from '../domain/entities/CulturalEvent';
+import { FeatureCollection, Point } from 'geojson';
+import {COLOR_BY_TYPE} from '../config';
 
 export const fromDto = (dto: CulturalEventDto): CulturalEvent => {
   return {
@@ -48,5 +50,42 @@ export const fromDto = (dto: CulturalEventDto): CulturalEvent => {
         : undefined
     },
     accessibility: dto.organization && dto.organization.accesibility && parseFloat(dto.organization.accesibility) || '-',
+  };
+};
+
+export const toFeatureCollection = (domain: Array<CulturalEvent>): FeatureCollection<Point> => {
+  
+  return {
+    type: 'FeatureCollection',
+    features: domain
+      .filter(ev =>  ev.location.coords.latitude !== undefined && ev.location.coords.longitude !== undefined)
+      .map(e => (
+        {
+          type: 'Feature',
+          properties: {
+            id: e.id,
+            color: COLOR_BY_TYPE.filter(t => e.event.type === t.id)[0]?.color || '#6b6b6b',
+            type: e.event.type,
+            title: e.event.title,
+            description: e.event.description,
+            link: e.event.link,
+            organizer: e.event.organizer,
+            eventLocation: e.location.eventLocation,
+            district: e.location.address.district,
+            neighborhood: e.location.address.neighborhood,
+            locality: e.location.address.locality,
+            free: e.amount.free,
+            price: e.amount.price,
+            startDate: e.date.startDate,
+            endDate: e.date.endDate,
+            time: e.date.time,
+            accessibility: e.accessibility,
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [e.location.coords.longitude!, e.location.coords.latitude!]
+          }
+        }
+      ))
   };
 };

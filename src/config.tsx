@@ -13,9 +13,9 @@ export const MINISIDEPANEL_CONFIG = [
 ];
 
 export const INITIAL_VIEWPORT = {
-  latitude: 41.4,
-  longitude: 2.2,
-  zoom: 5,
+  latitude: 40.417025,
+  longitude: -3.702908,
+  zoom: 11,
   bearing: 0,
   pitch: 0
 };
@@ -70,4 +70,27 @@ export const MAPSTYLES = [
   }
 ];
 
-export const INITIAL_MAPSTYLE_URL = MAPSTYLES[3].id;
+export const INITIAL_MAPSTYLE_URL = MAPSTYLES[2].id;
+
+export const COLOR_BY_TYPE = [
+  {
+    id: 'Teatro Performance',
+    color: '#2a5fcf'
+  },
+  {
+    id: 'Exposiciones',
+    color: '#ded306'
+  },
+  {
+    id: 'Programación Destacada Agenda Cultural',
+    color: '#06de9d'
+  },
+  {
+    id: 'Jazz Soul Funky Swing Reagge',
+    color: '#380e51'
+  },
+  {
+    id: 'Música',
+    color: '#dd4b0c'
+  }
+];

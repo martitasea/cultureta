@@ -6,13 +6,14 @@ import BaseMapList from '@geomatico/geocomponents/Map/BaseMapList';
 
 import Box from '@mui/material/Box';
 
-import {MAPSTYLES} from '../../config';
+import {COLOR_BY_TYPE, MAPSTYLES} from '../../config';
 import SectionTitle from '../../components/SectionTitle';
 import GeomaticoLink from '../../components/GeomaticoLink';
 import styled from '@mui/system/styled';
 import Typography from '@mui/material/Typography';
 import {CulturalEvent} from '../../domain/entities/CulturalEvent';
 import {getUniqueValues} from '../../utils/getUniqueValues';
+import CircleIcon from '@mui/icons-material/Circle';
 
 const ScrollableContent = styled(Box)({
   overflow: 'auto',
@@ -48,8 +49,10 @@ const SidePanelContent: FC<SidePanelContentProps> = ({events, mapStyle, onMapSty
       {events.length && <SectionTitle titleKey={'TIPO'}/>}
       {
         allTypes
-          .map((type, index) =>
-            <Typography sx={{fontSize: 12}} key={index}>{type}</Typography>
+          .map((type, index) => <Box key={index} sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1}}>
+            <CircleIcon sx={{fontSize: 10, color: COLOR_BY_TYPE.filter(t => type === t.id)[0]?.color || '#6b6b6b'}}/>
+            <Typography sx={{fontSize: 12}}>{type}</Typography>
+          </Box>
           )
       }
       {events.length && <SectionTitle titleKey={'DISTRITO'}/>}

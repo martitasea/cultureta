@@ -33,7 +33,7 @@ const Index = () => {
     };
     fetchEvents(); // Llamada a la función
   }, []);
-  console.log('events', events);
+
   const sidePanelContent = <SidePanelContent
     events={events}
     mapStyle={mapStyle}
@@ -41,6 +41,7 @@ const Index = () => {
   />;
 
   const mainContent = <MainContent
+    culturalEvents={events}
     mapStyle={mapStyle}
   />;
 

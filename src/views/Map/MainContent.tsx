@@ -4,7 +4,7 @@ import Map from '@geomatico/geocomponents/Map/Map';
 
 import {INITIAL_VIEWPORT} from '../../config';
 import {CulturalEvent} from '../../domain/entities/CulturalEvent';
-import {toFeatureCollection} from '../../serviceImpl/AytoMappers';
+import {toFeatureCollection} from '../../repository/CulturalEventMapper';
 import { LayerSpecification, SourceSpecification } from 'maplibre-gl';
 
 export type MainContentProps = {

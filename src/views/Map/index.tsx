@@ -5,8 +5,8 @@ import MainContent from './MainContent';
 
 import {INITIAL_MAPSTYLE_URL} from '../../config';
 
-import {CulturalEventDto} from '../../domain/entities/CulturalEventDto';
-import {fromDto} from '../../serviceImpl/AytoMappers';
+import {CulturalEventDto} from '../../repository/CulturalEventDto';
+import {fromDto} from '../../repository/CulturalEventMapper';
 import {CulturalEvent} from '../../domain/entities/CulturalEvent';
 
 const Index = () => {

@@ -1,4 +1,4 @@
-import {CulturalEventDto} from '../domain/entities/CulturalEventDto';
+import {CulturalEventDto} from './CulturalEventDto';
 import {getLastWords} from '../utils/getLastWords';
 import {CulturalEvent} from '../domain/entities/CulturalEvent';
 import { FeatureCollection, Point } from 'geojson';

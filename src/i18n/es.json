@@ -1,4 +1,15 @@
 {
-  "baseMapStyle": "Estilo Mapa Base"
+  "accept": "Aceptar",
+  "amount": "Precio",
+  "audience": "Audiencia",
+  "baseMapStyle": "Estilo Mapa Base",
+  "cancel": "Cancelar",
+  "date": "Fecha y hora",
+  "exit": "Cerrar",
+  "includeOccurrences": "que deberías incluir en el diccionario.",
+  "location": "Localización",
+  "newOccurrences": "Han aparecido nuevas ocurrencias:",
+  "settings": "Configuración",
+  "type": "Tipo de evento"
 }
 

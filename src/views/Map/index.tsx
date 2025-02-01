@@ -12,7 +12,8 @@ import {CulturalEvent} from '../../domain/entities/CulturalEvent';
 const Index = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
   const [events, setEvents] = useState<Array<CulturalEvent>>([]);
-  
+  const [menuId, setMenuId] = useState<string>('type');
+
   useEffect(() => {
   // Función para realizar la solicitud usando .then()
     const fetchEvents = () => {
@@ -36,6 +37,7 @@ const Index = () => {
 
   const sidePanelContent = <SidePanelContent
     events={events}
+    menuId={menuId}
     mapStyle={mapStyle}
     onMapStyleChanged={setMapStyle}
   />;
@@ -46,8 +48,10 @@ const Index = () => {
   />;
 
   return <Layout
+    culturalEvents={events}
     sidePanelContent={sidePanelContent}
     mainContent={mainContent}
+    onMenuIdChange={setMenuId}
   />;
 };
 

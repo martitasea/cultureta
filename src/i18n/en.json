@@ -1,3 +1,14 @@
 {
-  "baseMapStyle": "Base Map Style"
+  "accept": "Accept",
+  "amount": "Price",
+  "audience": "Audience",
+  "baseMapStyle": "Base Map Style",
+  "cancel": "Cancel",
+  "date": "Date and Time",
+  "exit": "Close",
+  "includeOccurrences": "that you should include in the dictionary.",
+  "location": "Location",
+  "newOccurrences": "New occurrences have appeared:",
+  "settings": "Settings",
+  "type": "Event Type"
 }

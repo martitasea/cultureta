@@ -6,10 +6,12 @@
   "cancel": "Cancelar",
   "date": "Fecha y hora",
   "exit": "Cerrar",
+  "from": "Desde",
   "includeOccurrences": "que deberías incluir en el diccionario.",
   "location": "Localización",
   "newOccurrences": "Han aparecido nuevas ocurrencias:",
   "settings": "Configuración",
+  "to": "Hasta",
   "type": "Tipo de evento"
 }
 

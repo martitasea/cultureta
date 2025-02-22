@@ -1,7 +1,8 @@
 export type CulturalEvent = {
   id: string,
+  type: string,
   event: {
-    type: string,
+    //type: string,
     title: string,
     description: string,
       link: string,
@@ -30,8 +31,8 @@ export type CulturalEvent = {
   date: {
     time: string,
     excludedDays: string,
-    startDate: Date | string
-    endDate: Date | string,
+    startDate: Date | undefined
+    endDate: Date | undefined,
     days?: Array<string>
   },
   accessibility: number | string,

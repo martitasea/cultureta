@@ -1,9 +1,9 @@
-import {TypeItem} from '../config';
+import {ChangedTypes, TypeItem} from '../domain/entities/common';
 
 export const evaluateOccurrences = (
   allTypes: Array<string>,
   dictionary: Array<TypeItem>
-) => {
+): ChangedTypes => {
   // 1. Crear un Set con todos los tipos definidos en el objeto TYPE_CATEGORIZER
   const categorizedOcurrences = new Set(
     dictionary.flatMap(category => category.types)

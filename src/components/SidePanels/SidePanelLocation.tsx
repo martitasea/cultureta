@@ -12,8 +12,6 @@ import {CulturalEvent} from '../../domain/entities/CulturalEvent';
 
 import {getUniqueValues} from '../../utils/getUniqueValues';
 
-import {COLOR_BY_TYPE} from '../../config';
-
 export type SidePanelLocationProps = {
   events: Array<CulturalEvent>
 };
@@ -30,7 +28,7 @@ const SidePanelLocation: FC<SidePanelLocationProps> = ({events}) => {
     {
       allDistricts
         .map((type, index) => <Box key={index} sx={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 1}}>
-          <CircleIcon sx={{fontSize: 10, color: COLOR_BY_TYPE.filter(t => type === t.id)[0]?.color || '#6b6b6b'}}/>
+          <CircleIcon sx={{fontSize: 10, color: '#6b6b6b'}}/>
           <Typography sx={{fontSize: 12}}>{type}</Typography>
         </Box>
         )

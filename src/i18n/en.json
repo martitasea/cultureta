@@ -6,9 +6,11 @@
   "cancel": "Cancel",
   "date": "Date and Time",
   "exit": "Close",
+  "from": "From",
   "includeOccurrences": "that you should include in the dictionary.",
   "location": "Location",
   "newOccurrences": "New occurrences have appeared:",
   "settings": "Settings",
+  "to": "to",
   "type": "Event Type"
 }

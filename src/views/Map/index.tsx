@@ -1,17 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import Layout from '../../components/Layout';
 import SidePanelContent from './SidePanelContent';
 import MainContent from './MainContent';
 
-import {INITIAL_MAPSTYLE_URL} from '../../config';
+import {INITIAL_MAPSTYLE_URL, TYPE_CATEGORIZER} from '../../config';
 
 import {CulturalEventDto} from '../../repository/CulturalEventDto';
 import {fromDto} from '../../repository/CulturalEventMapper';
 import {CulturalEvent} from '../../domain/entities/CulturalEvent';
+import {getUniqueValues} from '../../utils/getUniqueValues';
+import {evaluateOccurrences} from '../../utils/evaluateOccurrences';
+import dayjs from 'dayjs';
 
 const Index = () => {
   const [mapStyle, setMapStyle] = useState(INITIAL_MAPSTYLE_URL);
-  const [events, setEvents] = useState<Array<CulturalEvent>>([]);
+  const [culturalEvents, setCulturalEvents] = useState<Array<CulturalEvent>>([]);
   const [menuId, setMenuId] = useState<string>('type');
 
   useEffect(() => {
@@ -26,7 +29,7 @@ const Index = () => {
         })
         .then(data => {
           const allData = data['@graph'].map((d: CulturalEventDto) => fromDto(d));
-          setEvents(allData);
+          setCulturalEvents(allData);
         })
         .catch(error => {
           console.error('Error al hacer la solicitud:', error);
@@ -35,22 +38,52 @@ const Index = () => {
     fetchEvents(); // Llamada a la función
   }, []);
 
+  //const allTypes = useMemo(() => getUniqueValues(culturalEvents.map(e => e.event.type)) || [], [culturalEvents]);
+  const allTypes = useMemo(() => getUniqueValues(culturalEvents.map(e => e.type)) || [], [culturalEvents]);
+  const newTypes = useMemo(() => evaluateOccurrences(allTypes, TYPE_CATEGORIZER) || [], [allTypes]);
+
+  const [isAlertTypeOpen, setAlertTypeOpen] = useState(newTypes && !!newTypes.unCategorizedOccurrences.length);
+  const [selectedTypes, setSelectedTypes] = useState(TYPE_CATEGORIZER.flatMap(c => c.types));
+  const [selectedStartDate, setStartDate] = useState(dayjs());
+  const [selectedEndDate, setEndDate] = useState(dayjs().add(99, 'day'));
+
+  useEffect(() => {
+    if (allTypes.length && newTypes.unCategorizedOccurrences.length) {
+      setAlertTypeOpen(true);
+    }
+    if (allTypes.length && newTypes.unUsedOccurrences.length) {
+      console.warn('OCURRENCIAS SIN USAR:', newTypes.unUsedOccurrences);
+    }
+  }, [newTypes]);
+
   const sidePanelContent = <SidePanelContent
-    events={events}
-    menuId={menuId}
+    changedTypes={newTypes}
+    events={culturalEvents}
     mapStyle={mapStyle}
+    menuId={menuId}
+    selectedEndDate={selectedEndDate}
+    selectedStartDate={selectedStartDate}
+    selectedTypes={selectedTypes}
     onMapStyleChanged={setMapStyle}
+    onEndDateChanged={setEndDate}
+    onSelectedTypesChanged={setSelectedTypes}
+    onStartDateChanged={setStartDate}
   />;
 
   const mainContent = <MainContent
-    culturalEvents={events}
+    culturalEvents={culturalEvents}
     mapStyle={mapStyle}
+    selectedEndDate={selectedEndDate}
+    selectedStartDate={selectedStartDate}
+    selectedTypes={selectedTypes}
   />;
 
   return <Layout
-    culturalEvents={events}
+    newTypes={newTypes}
     sidePanelContent={sidePanelContent}
     mainContent={mainContent}
+    isAlertTypeOpen={isAlertTypeOpen}
+    onAlertTypeOpen={() => setAlertTypeOpen(false)}
     onMenuIdChange={setMenuId}
   />;
 };

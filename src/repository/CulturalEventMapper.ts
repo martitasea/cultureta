@@ -2,13 +2,15 @@ import {CulturalEventDto} from './CulturalEventDto';
 import {getLastWords} from '../utils/getLastWords';
 import {CulturalEvent} from '../domain/entities/CulturalEvent';
 import { FeatureCollection, Point } from 'geojson';
-import {COLOR_BY_TYPE} from '../config';
+import {TYPE_CATEGORIZER} from '../config';
+/*import {formatDate} from '../utils/formatDate';*/
 
 export const fromDto = (dto: CulturalEventDto): CulturalEvent => {
   return {
     id: dto.uid || '',
+    type: dto['@type'] ? getLastWords(dto['@type']) : '',
     event: {
-      type: dto['@type'] ? getLastWords(dto['@type']) : '',
+      //type: dto['@type'] ? getLastWords(dto['@type']) : '',
       title: dto.title || '-',
       description: dto.description ?? '',
       link: dto.link || '-',
@@ -41,8 +43,8 @@ export const fromDto = (dto: CulturalEventDto): CulturalEvent => {
     date: {
       time: dto.time || '-',
       excludedDays: dto['excluded-days'] ?? '',
-      startDate: dto.dtstart ? new Date(dto.dtstart) : '-',
-      endDate: dto.dtend ? new Date(dto.dtend) : '-',
+      startDate: dto.dtstart ? new Date(dto.dtstart) : undefined,
+      endDate: dto.dtend ? new Date(dto.dtend) : undefined,
       days: dto.recurrence && dto.recurrence.days
         ? dto.recurrence.days.includes(',')
           ? dto.recurrence.days.split(',')
@@ -54,7 +56,7 @@ export const fromDto = (dto: CulturalEventDto): CulturalEvent => {
 };
 
 export const toFeatureCollection = (domain: Array<CulturalEvent>): FeatureCollection<Point> => {
-  
+  console.log(domain);
   return {
     type: 'FeatureCollection',
     features: domain
@@ -64,8 +66,8 @@ export const toFeatureCollection = (domain: Array<CulturalEvent>): FeatureCollec
           type: 'Feature',
           properties: {
             id: e.id,
-            color: COLOR_BY_TYPE.filter(t => e.event.type === t.id)[0]?.color || '#6b6b6b',
-            type: e.event.type,
+            color: TYPE_CATEGORIZER.find(cat => cat.types.includes(e.type))?.color || '#6b6b6b',
+            type: e.type,
             title: e.event.title,
             description: e.event.description,
             link: e.event.link,
@@ -79,6 +81,8 @@ export const toFeatureCollection = (domain: Array<CulturalEvent>): FeatureCollec
             startDate: e.date.startDate,
             endDate: e.date.endDate,
             time: e.date.time,
+            excludedDays: e.date.excludedDays,
+            days: e.date.days,
             accessibility: e.accessibility,
           },
           geometry: {

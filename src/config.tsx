@@ -1,3 +1,5 @@
+import {TypeItem} from './domain/entities/common';
+
 export const DRAWER_WIDTH = 320;
 export const SM_BREAKPOINT = 600;
 export const MINI_SIDE_PANEL_WIDTH = 61;
@@ -62,36 +64,6 @@ export const MAPSTYLES = [
 ];
 
 export const INITIAL_MAPSTYLE_URL = MAPSTYLES[2].id;
-
-export const COLOR_BY_TYPE = [
-  {
-    id: 'Teatro Performance',
-    color: '#2a5fcf'
-  },
-  {
-    id: 'Exposiciones',
-    color: '#ded306'
-  },
-  {
-    id: 'Programación Destacada Agenda Cultural',
-    color: '#06de9d'
-  },
-  {
-    id: 'Jazz Soul Funky Swing Reagge',
-    color: '#380e51'
-  },
-  {
-    id: 'Música',
-    color: '#dd4b0c'
-  }
-];
-
-export type TypeItem = {
-  id: string,
-  label: string,
-  color: string,
-  types: Array<string>
-};
 
 export const TYPE_CATEGORIZER: Array<TypeItem> = [
   {

@@ -1,4 +1,4 @@
-import React, {FC, useEffect, useMemo, useState} from 'react';
+import React, {FC, useState} from 'react';
 
 import styled from '@mui/system/styled';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -20,13 +20,14 @@ import MiniSidePanel from '@geomatico/geocomponents/Layout/MiniSidePanel';
 import {
   DRAWER_WIDTH,
   MINI_SIDE_PANEL_WIDTH,
-  SM_BREAKPOINT, TYPE_CATEGORIZER,
+  SM_BREAKPOINT,
 } from '../config';
 import {useTranslation} from 'react-i18next';
-import {getUniqueValues} from '../utils/getUniqueValues';
-import {evaluateOccurrences} from '../utils/evaluateOccurrences';
+/*import {getUniqueValues} from '../utils/getUniqueValues';
+import {evaluateOccurrences} from '../utils/evaluateOccurrences';*/
 import AlertOccurrences from './AlertOccurrences';
-import {CulturalEvent} from '../domain/entities/CulturalEvent';
+/*import {CulturalEvent} from '../domain/entities/CulturalEvent';*/
+import {ChangedTypes} from '../domain/entities/common';
 
 
 export type MainProps = {
@@ -86,14 +87,16 @@ const styles = {
 };
 
 export type LayoutProps = {
-  culturalEvents: Array<CulturalEvent>,
+  isAlertTypeOpen: boolean,
+  newTypes: ChangedTypes,
   mainContent: React.ReactElement,
   sidePanelContent: React.ReactElement,
   menuId?: string,
   onMenuIdChange: (menuId: string) => void,
+  onAlertTypeOpen: () => void,
 };
 
-const Layout:  FC<LayoutProps> = ({culturalEvents, mainContent, sidePanelContent, menuId, onMenuIdChange}) => {
+const Layout:  FC<LayoutProps> = ({isAlertTypeOpen, newTypes, mainContent, sidePanelContent, menuId, onMenuIdChange, onAlertTypeOpen}) => {
 
   const {t} = useTranslation();
 
@@ -105,19 +108,6 @@ const Layout:  FC<LayoutProps> = ({culturalEvents, mainContent, sidePanelContent
 
   const handleClose = () => setIsSidePanelOpen(!isSidePanelOpen);
 
-  const allTypes = useMemo(() => getUniqueValues(culturalEvents.map(e => e.event.type)), [culturalEvents]);
-  const newTypes = useMemo(() => evaluateOccurrences(allTypes, TYPE_CATEGORIZER), [allTypes]);
-
-  const [isAlertTypeOpen, setAlertTypeOpen] = useState(!!newTypes.unCategorizedOccurrences.length);
-
-  useEffect(() => {
-    if (allTypes.length && newTypes.unCategorizedOccurrences.length) {
-      setAlertTypeOpen(true);
-    }
-    if (allTypes.length && newTypes.unUsedOccurrences.length) {
-      console.warn('OCURRENCIAS SIN USAR:', newTypes.unUsedOccurrences);
-    }
-  }, [newTypes]);
 
   const MINISIDEPANEL_CONFIG = [
     {id: 'type', label: t('type') , content: <CelebrationIcon/>},
@@ -162,7 +152,7 @@ const Layout:  FC<LayoutProps> = ({culturalEvents, mainContent, sidePanelContent
     {
       isAlertTypeOpen && <AlertOccurrences
         title={'Nuevos tipos'}
-        onClose={() => setAlertTypeOpen(false)}
+        onClose={onAlertTypeOpen}
         items={newTypes.unCategorizedOccurrences}/>
     }
   </>;

@@ -5,15 +5,47 @@ import Map from '@geomatico/geocomponents/Map/Map';
 import {INITIAL_VIEWPORT} from '../../config';
 import {CulturalEvent} from '../../domain/entities/CulturalEvent';
 import {toFeatureCollection} from '../../repository/CulturalEventMapper';
-import { LayerSpecification, SourceSpecification } from 'maplibre-gl';
+import { SourceSpecification } from 'maplibre-gl';
+import {getLayers} from '../../domain/useCases/getLayers';
+
+import { MapLayerMouseEvent } from 'maplibre-gl';
+/*import styled from '@mui/system/styled';*/
+import {FeatureProperties} from '../../domain/entities/common';
+/*import {PopUpInfo} from '../../domain/entities/common';*/
+import Typography from '@mui/material/Typography';
+import Tooltip from '../../components/Tooltip';
+import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
+import {Dayjs} from 'dayjs';
+/*import {formatDate} from '../../utils/formatDate';*/
+
+/*const PopupInfo = styled(Popup)({
+  cursor: 'default',
+  '& .mapboxgl-popup-content': {
+    padding: 0
+  }
+});*/
 
 export type MainContentProps = {
-  mapStyle: string,
   culturalEvents: Array<CulturalEvent>
+  mapStyle: string,
+  selectedStartDate: Dayjs,
+  selectedEndDate: Dayjs,
+  selectedTypes: Array<string>
 };
 
-const MainContent: FC<MainContentProps> = ({culturalEvents, mapStyle}) => {
+const MainContent: FC<MainContentProps> = ({
+  culturalEvents,
+  mapStyle,
+  /*selectedStartDate,
+  selectedEndDate,*/
+  selectedTypes
+}) => {
+
   const [viewport, setViewport] = useState(INITIAL_VIEWPORT);
+
+  const [tooltipValue, setTooltipValue] = useState<FeatureProperties | undefined>(undefined);
+  const [tooltipPosition, setTooltipPosition] = useState<{ top: number, left: number } | undefined>(undefined);
 
   const sources: {
 		[_: string]: SourceSpecification;
@@ -26,45 +58,67 @@ const MainContent: FC<MainContentProps> = ({culturalEvents, mapStyle}) => {
 	  }
 	), [culturalEvents]);
 
-  const layers: Array<LayerSpecification> = [
-    {
-      'id': 'culturalEvents-points',
-      'source': 'culturalEvents',
-      'type': 'circle',
-      'paint': {
-        'circle-color': ['get', 'color'],
-        'circle-stroke-width': [
-          'case',
-          ['==', ['get', 'free'], true],
-          1,
-          0
-        ],
-        'circle-stroke-color': '#000000',
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 14, 5, 20, 2],
-      }
-    },
-    {
-      'id': 'culturalEvents-organizer',
-      'source': 'culturalEvents',
-      'type': 'symbol',
-      'minzoom': 12,
-      'layout': {
-        'text-field':  ['get', 'title'],
-        'text-anchor': 'left',
-        'text-justify': 'left',
-        'text-radial-offset': 1,
-        'text-size': 20
-      }
-    }
-  ];
+  /*const timestampStartDate = selectedStartDate.unix();
+  const timestampEndDate = selectedEndDate.unix();*/
 
+  const layers = useMemo(
+    //() => getLayers(selectedTypes, timestampStartDate, timestampEndDate),
+    () => getLayers(selectedTypes),
+    [selectedTypes]);
+
+  const handleClick = (event: MapLayerMouseEvent) => {
+    const culturalEventFeature = event.features?.[0];
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const properties: FeatureProperties | undefined = culturalEventFeature?.properties;
+    if(culturalEventFeature) {
+      setTooltipPosition({left: event.originalEvent.pageX, top: event.originalEvent.pageY});
+      setTooltipValue(properties);
+    } else {
+      setTooltipPosition(undefined);
+      setTooltipValue(undefined);
+    }
+  };
+  console.log(tooltipValue);
   return <Map
     sources={sources}
     layers={layers}
     mapStyle={mapStyle}
     viewport={viewport}
     onViewportChange={setViewport}
-  />;
+    interactiveLayerIds={['culturalEvents-points']}
+    onClick={handleClick}
+  >
+    {tooltipValue && tooltipPosition &&
+      <Tooltip {...tooltipPosition}>
+        <Box p={1}>
+          <Typography variant="overline" sx={{fontSize: 12, fontWeight: 900}}>{tooltipValue.eventLocation}</Typography>
+          <Typography sx={{fontSize: 12}} gutterBottom>{tooltipValue.title}</Typography>
+          <Typography sx={{fontSize: 12}}>{tooltipValue.description}</Typography>
+          {/*<Typography sx={{fontSize: 12}}>CUANDO {tooltipValue.startDate === tooltipValue.endDate ? tooltipValue.startDate : `${tooltipValue.startDate} - ${tooltipValue.endDate}`}</Typography>*/}
+          {!tooltipValue.free && <Typography sx={{fontSize: 12}}>PRECIO {tooltipValue.price}</Typography>}
+          <Link href={tooltipValue.link} target="_blank" rel="noreferrer">Más info...</Link>
+        </Box>
+      </Tooltip>
+    }
+    {/* {popupInfo && popupInfo.lat && popupInfo.lng &&
+      <Popup
+        latitude={popupInfo?.lat}
+        longitude={popupInfo?.lng}
+        closeButton={true}
+        closeOnClick={false}
+        onClose={() => setPopupInfo(undefined)}
+        anchor="top"
+      >
+        <Card>
+          <CardContent>
+            <Typography>{popupInfo.properties.title}</Typography>
+          </CardContent>
+        </Card>
+      </Popup>
+    }*/}
+  </Map>
+  ;
 };
 
 export default MainContent;
